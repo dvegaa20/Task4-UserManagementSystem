@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -60,13 +56,55 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  .remove-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+  }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer utilities {
+  .status-badge {
+    @apply flex w-fit items-center gap-2 rounded-full px-4 py-2;
   }
-  body {
-    @apply bg-background text-foreground;
+  .shad-gray-btn {
+    @apply border border-dark-500 cursor-pointer bg-dark-400 text-white !important;
+  }
+  .data-table {
+    @apply z-10 w-full overflow-hidden rounded-lg border bg-dark-200 border-dark-400 shadow-lg;
+  }
+  .table-actions {
+    @apply flex w-full items-center justify-between space-x-2 p-4 bg-dark-200;
+  }
+  .shad-table {
+    @apply rounded-lg overflow-hidden !important;
+  }
+
+  .shad-table-row-header {
+    @apply border-b border-dark-400 text-light-200 hover:bg-transparent !important;
+  }
+
+  .shad-table-row {
+    @apply border-b bg-dark-400 border-dark-400 text-light-200 !important;
+  }
+  .text-32-bold {
+    @apply text-[32px] leading-[36px] font-bold;
+  }
+  .header {
+    @apply text-32-bold;
   }
 }
