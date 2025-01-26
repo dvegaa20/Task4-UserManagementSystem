@@ -1,5 +1,6 @@
 import * as React from "react";
 import { InputFieldProps } from "@/types/index";
+import Image from "next/image";
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
@@ -28,7 +29,7 @@ export const InputField: React.FC<InputFieldProps> = ({
             />
             {showIcon && iconSrc && (
               <div className="flex gap-4 items-start self-stretch p-2 my-auto w-8">
-                <img
+                <Image
                   loading="lazy"
                   src={iconSrc}
                   alt=""
