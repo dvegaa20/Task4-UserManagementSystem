@@ -22,7 +22,7 @@ const SubmitButton = ({
       className={className}
       onClick={() => {
         if (disabled || isLoading) return;
-        onClick!();
+        onClick?.();
         if (toastProps) {
           toast({
             title: toastProps!.title,
