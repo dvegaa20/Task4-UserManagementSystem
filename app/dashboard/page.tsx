@@ -7,6 +7,8 @@ import { getUsersInfo } from "@/lib/actions/user.actions";
 import Search from "@/components/Search";
 import { User } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 const Home = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
