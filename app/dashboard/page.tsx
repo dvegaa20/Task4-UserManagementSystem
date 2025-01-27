@@ -39,7 +39,7 @@ const UserTableContent = () => {
       <h1 className="header text-light-200 pt-10 text-2xl md:text-3xl font-bold sm:px-4">
         User Management Table
       </h1>
-      <div className="w-full mt-6 sm:px-4">
+      <div className="relative w-full mt-6 sm:px-4">
         <Search onSearch={handleSearch} />
         <DataTable columns={columns} data={filteredUsers} />
       </div>
