@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden relative flex-col bg-white rounded-xl">
-      <div className="flex w-full h-full max-md:flex-col max-md:overflow-hidden">
+      <div className="flex w-full h-full max-md:flex-col md:overflow-hidden max-md:overflow-auto">
         <div className="flex-1 flex items-center justify-center">
           <Image
             loading="lazy"
