@@ -9,6 +9,9 @@ import {
   DATABASE_ID,
   USER_COLLECTION_ID,
 } from "../appwrite.config";
+import { redirect } from "next/navigation";
+
+let globalSession: any = null;
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -46,6 +49,8 @@ export const getUser = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
 
+    globalSession = session;
+
     const users = await databases.listDocuments(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
@@ -55,7 +60,7 @@ export const getUser = async (email: string, password: string) => {
     if (users.documents[0].status === false) {
       return { error: "User is blocked" };
     } else {
-      const updateStatus = await databases.updateDocument(
+      await databases.updateDocument(
         DATABASE_ID!,
         USER_COLLECTION_ID!,
         users.documents[0].$id,
@@ -97,58 +102,84 @@ export const getUsersInfo = async () => {
 
 export const blockUser = async (ids: string[]) => {
   try {
-    await Promise.all(
-      ids.map(async (id) => {
-        const updateStatus = await databases.updateDocument(
-          DATABASE_ID!,
-          USER_COLLECTION_ID!,
-          id,
-          {
-            status: false,
-          }
-        );
-      })
+    const users = await databases.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      [Query.equal("email", [globalSession.providerUid])]
     );
-    revalidatePath("/dashboard");
+
+    if (users.documents[0].status === false) {
+      return { redirect: "/" };
+    } else {
+      await Promise.all(
+        ids.map(async (id) => {
+          await databases.updateDocument(
+            DATABASE_ID!,
+            USER_COLLECTION_ID!,
+            id,
+            {
+              status: false,
+            }
+          );
+        })
+      );
+      return { redirect: "/dashboard" };
+    }
   } catch (error) {
-    console.error(error);
+    return { error: "An error occurred" };
   }
 };
 
 export const unblockUser = async (ids: string[]) => {
   try {
-    await Promise.all(
-      ids.map(async (id) => {
-        const updateStatus = await databases.updateDocument(
-          DATABASE_ID!,
-          USER_COLLECTION_ID!,
-          id,
-          {
-            status: true,
-          }
-        );
-      })
+    const users = await databases.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      [Query.equal("email", [globalSession.providerUid])]
     );
-    revalidatePath("/dashboard");
+
+    if (users.documents[0].status === false) {
+      return { redirect: "/" };
+    } else {
+      await Promise.all(
+        ids.map(async (id) => {
+          await databases.updateDocument(
+            DATABASE_ID!,
+            USER_COLLECTION_ID!,
+            id,
+            {
+              status: true,
+            }
+          );
+        })
+      );
+      return { redirect: "/dashboard" };
+    }
   } catch (error) {
-    console.error(error);
+    return { error: "An error occurred" };
   }
 };
 
 export const deleteUser = async (id: string[]) => {
   try {
-    await Promise.all(
-      id.map(async (id) => {
-        const deleteDocument = await databases.deleteDocument(
-          DATABASE_ID!,
-          USER_COLLECTION_ID!,
-          id
-        );
-      })
+    const users = await databases.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      [Query.equal("email", [globalSession.providerUid])]
     );
-    revalidatePath("/dashboard");
+
+    if (users.documents[0].status === false) {
+      return { redirect: "/" };
+    } else {
+      await Promise.all(
+        id.map(async (id) => {
+          await databases.deleteDocument(DATABASE_ID!, USER_COLLECTION_ID!, id);
+        })
+      );
+      return { redirect: "/dashboard" };
+    }
   } catch (error) {
-    console.error(error);
+    return { error: "An error occurred" };
   }
 };
 

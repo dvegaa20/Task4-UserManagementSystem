@@ -21,11 +21,14 @@ import Image from "next/image";
 import { DataTableProps } from "@/types";
 import { useState } from "react";
 import SubmitButton from "../SubmitButton";
+import { useRouter } from "next/navigation";
 
 export function DataTable<TData extends { id: string; email: string }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+
   const [isBlockedLoading, setIsBlockedLoading] = useState(false);
   const [isUnblockLoading, setIsUnblockLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
@@ -47,7 +50,14 @@ export function DataTable<TData extends { id: string; email: string }, TValue>({
   const handleBlockUsers = async () => {
     setIsBlockedLoading(true);
     try {
-      await blockUser(selectedRows.map((row) => row.original.id));
+      const response = await blockUser(
+        selectedRows.map((row) => row.original.id)
+      );
+
+      if (response!.redirect) {
+        window.location.href = response!.redirect;
+      }
+
       setTimeout(() => {
         table.resetRowSelection();
         setIsBlockedLoading(false);
@@ -62,7 +72,14 @@ export function DataTable<TData extends { id: string; email: string }, TValue>({
   const handleUnblockUsers = async () => {
     setIsUnblockLoading(true);
     try {
-      await unblockUser(selectedRows.map((row) => row.original.id));
+      const response = await unblockUser(
+        selectedRows.map((row) => row.original.id)
+      );
+
+      if (response!.redirect) {
+        window.location.href = response!.redirect;
+      }
+
       setTimeout(() => {
         table.resetRowSelection();
         setIsUnblockLoading(false);
@@ -77,7 +94,14 @@ export function DataTable<TData extends { id: string; email: string }, TValue>({
   const handleDeleteUsers = async () => {
     setIsDeleteLoading(true);
     try {
-      await deleteUser(selectedRows.map((row) => row.original.id));
+      const response = await deleteUser(
+        selectedRows.map((row) => row.original.id)
+      );
+
+      if (response!.redirect) {
+        window.location.href = response!.redirect;
+      }
+
       setTimeout(() => {
         table.resetRowSelection();
         setIsDeleteLoading(false);
